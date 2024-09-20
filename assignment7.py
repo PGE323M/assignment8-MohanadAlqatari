@@ -28,15 +28,23 @@ class KozenyCarmen():
         #class instantiation and stores the columns of the data as
         #class attributes porosity and permeability
         self.df = pd.read_csv(filename)
+
+        self.kc_model()
         
         return
     
+    def kc_model(self):
+        
+        self.df['KC model'] = self.df['porosity']**3/(1-self.df['porosity'])**2
+        
+        return 
+
     def fit(self):
         #This function should implement a lambda function defining the form
         #of the function to curve fit, then return the estimated parameters
         #of both the \kappa_0 and m
         f = lambda phi, kappa0, m: kappa0 + m * (phi ** 3 / (1 - phi) ** 2)
-        
+
         popt, pcov = scipy.optimize.curve_fit(f, self.df['porosity'], self.df['permeability']) 
         return popt
     
